@@ -294,7 +294,7 @@
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">pm = ondemand   // 用pm=ondemand替换了pm=dynamic
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="nv">pm</span> <span class="o">=</span> ondemand   // <span class="nv">用pm</span><span class="o">=</span><span class="nv">ondemand替换了pm</span><span class="o">=</span>dynamic
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>当然这是建立在你的服务器没有很大的并发压力的情况下的修改，牺牲cpu来优化内存。如果服务器访问压力大就不要这样配置。
@@ -315,15 +315,15 @@
 </span><span class="lnt">11
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">mysql&gt; show engine performance_schema status;
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">mysql&gt; show engine performance_schema status<span class="p">;</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">结果如下
-</span></span><span class="line"><span class="cl">| performance_schema | performance_schema.memory | 303521144 |
+</span></span><span class="line"><span class="cl"><span class="p">|</span> performance_schema <span class="p">|</span> performance_schema.memory <span class="p">|</span> <span class="m">303521144</span> <span class="p">|</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">只需要在mysql配置文件my.cnf中关闭performance_schema就可以了，添加一句：
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">performance_schema=OFF
+</span></span><span class="line"><span class="cl"><span class="nv">performance_schema</span><span class="o">=</span>OFF
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">重启下mysql你会发现内存又空出了几百M
 </span></span></code></pre></td></tr></table>
