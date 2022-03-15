@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>vps服务器内存优化 - BetterNight - 技术博客</title>
+  <title>VPS服务器内存优化 - BetterNight - 技术博客</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -41,19 +41,19 @@
 
 
 
-<meta property="og:title" content="vps服务器内存优化" />
+<meta property="og:title" content="VPS服务器内存优化" />
 <meta property="og:description" content="为什么要优化vps服务器内存 程序员都喜欢折腾vps服务器，但是又不想花很多钱在上面，所以总是买一些非常低配的vps，512M内存的服务器又要" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://betternight.github.io/post/optimize-memory/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2022-03-13T15:48:56+08:00" />
 <meta property="article:modified_time" content="2022-03-13T15:48:56+08:00" />
 
-<meta itemprop="name" content="vps服务器内存优化">
+<meta itemprop="name" content="VPS服务器内存优化">
 <meta itemprop="description" content="为什么要优化vps服务器内存 程序员都喜欢折腾vps服务器，但是又不想花很多钱在上面，所以总是买一些非常低配的vps，512M内存的服务器又要"><meta itemprop="datePublished" content="2022-03-13T15:48:56+08:00" />
 <meta itemprop="dateModified" content="2022-03-13T15:48:56+08:00" />
-<meta itemprop="wordCount" content="783">
+<meta itemprop="wordCount" content="1735">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="vps服务器内存优化"/>
+<meta name="twitter:title" content="VPS服务器内存优化"/>
 <meta name="twitter:description" content="为什么要优化vps服务器内存 程序员都喜欢折腾vps服务器，但是又不想花很多钱在上面，所以总是买一些非常低配的vps，512M内存的服务器又要"/>
 
 <!--[if lte IE 9]>
@@ -119,7 +119,7 @@
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title">vps服务器内存优化</h1>
+      <h1 class="post-title">VPS服务器内存优化</h1>
 
       <div class="post-meta">
         <span class="post-time"> 2022-03-13 </span>
@@ -140,6 +140,10 @@
             <li><a href="#为什么要优化vps服务器内存">为什么要优化vps服务器内存</a></li>
             <li><a href="#防止进程被oom-killer-杀掉">防止进程被oom killer 杀掉</a></li>
             <li><a href="#添加swap分区">添加swap分区</a></li>
+            <li><a href="#php-fpm减少内存占用">php-fpm减少内存占用</a></li>
+            <li><a href="#mysql内存占用太大">mysql内存占用太大</a></li>
+            <li><a href="#尽量不要用jvm的语言比如java">尽量不要用jvm的语言，比如java</a></li>
+            <li><a href="#总结">总结</a></li>
           </ul>
         </li>
       </ul>
@@ -205,6 +209,129 @@
 <li>Used：已经被使用的大小，这里0表示还没有被使用到</li>
 <li>Priority：优先级，优先级高的swap将会被优先使用，同等优先级的swap将会被均匀的使用（round-robin算法），优先级可以通过“swapon -p”命令来设置</li>
 </ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1">#先创建一个新的512M的文件，用来作为swap文件，文件路径可以随便</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#fallocate这个命令依赖于文件系统，有些老的文件系统不支持这个命令，比如ext2，</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#这种情况下可以用dd来实现同样的效果：</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#sudo dd if=/dev/zero of=/mnt/512MiB.swap bs=1024 count=524288</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#fallocate和dd的区别在于：</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#fallocate是先声明这么多，然后在具体用到的时候文件系统才分配真正的物理磁盘空间，就是用一点分配一点，</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#而dd是一开始就实实在在的写了512m的数据到物理磁盘空间。</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#所以作为测试来说fallocate方便些，因为刚开始不用写任何数据，要快</span>
+</span></span><span class="line"><span class="cl">dev@dev:~$ sudo fallocate -l 512m /mnt/512MiB.swap
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#修改文件的权限，避免其他用户对这个文件进行误操作</span>
+</span></span><span class="line"><span class="cl">dev@dev:~$ sudo chmod <span class="m">600</span> /mnt/512MiB.swap
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#格式化为swap文件</span>
+</span></span><span class="line"><span class="cl">dev@dev:~$ sudo mkswap /mnt/512MiB.swap
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#将新的文件加入到系统中</span>
+</span></span><span class="line"><span class="cl">dev@dev:~$ sudo swapon /mnt/512MiB.swap
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#这时候可以看到新的swap文件已经被加入到系统中了，类型为file</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#这里可以看到由于优先级最高，第一个swap分区/dev/dm-1已经被使用了24K</span>
+</span></span><span class="line"><span class="cl">dev@dev:~$ swapon -s
+</span></span><span class="line"><span class="cl">Filename                Type        Size    Used    Priority
+</span></span><span class="line"><span class="cl">/dev/dm-1               partition   <span class="m">524284</span>  <span class="m">24</span>      -1
+</span></span><span class="line"><span class="cl">/dev/sdb1               partition   <span class="m">2096124</span> <span class="m">0</span>       -2
+</span></span><span class="line"><span class="cl">/mnt/512MiB.swap        file        <span class="m">524284</span>  <span class="m">0</span>       -3
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#从free命令的输出可以看到，经过前面两轮添加swap分区和文件，</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#现在系统的交换空间已经变成3G(3144692K)了</span>
+</span></span><span class="line"><span class="cl">dev@dev:~$ free
+</span></span><span class="line"><span class="cl">              total        used        free      shared  buff/cache   available
+</span></span><span class="line"><span class="cl">Mem:         <span class="m">500192</span>       <span class="m">39112</span>        <span class="m">9564</span>        <span class="m">1996</span>      <span class="m">451516</span>      <span class="m">430820</span>
+</span></span><span class="line"><span class="cl">Swap:       <span class="m">3144692</span>          <span class="m">24</span>     <span class="m">3144668</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#同样为了保证系统重启后会自动加载我们新的swap文件，需要修改/etc/fstab文件</span>
+</span></span><span class="line"><span class="cl">dev@dev:~$ sudo sh -c <span class="s1">&#39;echo &#34;/mnt/512MiB.swap none  swap    sw   0    0&#34; &gt;&gt; /etc/fstab&#39;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="php-fpm减少内存占用">php-fpm减少内存占用</h3>
+<p>修改php-fpm的配置文件</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">pm = ondemand   // 用pm=ondemand替换了pm=dynamic
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>当然这是建立在你的服务器没有很大的并发压力的情况下的修改，牺牲cpu来优化内存。如果服务器访问压力大就不要这样配置。
+这样配置后起码节省几百M的内存</p>
+<h3 id="mysql内存占用太大">mysql内存占用太大</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">mysql&gt; show engine performance_schema status;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">结果如下
+</span></span><span class="line"><span class="cl">| performance_schema | performance_schema.memory | 303521144 |
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">只需要在mysql配置文件my.cnf中关闭performance_schema就可以了，添加一句：
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">performance_schema=OFF
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">重启下mysql你会发现内存又空出了几百M
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="尽量不要用jvm的语言比如java">尽量不要用jvm的语言，比如java</h3>
+<p>jvm太占内存了，推荐go，方便部署，配合docker实在太好用了</p>
+<h3 id="总结">总结</h3>
+<p>上面这些配置都是建立在您的网站访问并发量不大的情况下的优化，不过一般访问量的话还是优先推荐增加服务器配置，或者程序逻辑上优化代码，少用java。</p>
 
     </div>
 
@@ -238,7 +365,7 @@
     <script type="text/javascript">
       var gitalk = new Gitalk({
         id: '2022-03-13 15:48:56 \u002b0800 CST',
-        title: 'vps服务器内存优化',
+        title: 'VPS服务器内存优化',
         clientID: 'e9d17e377e46fbf01383',
         clientSecret: '2f75944d44376cdde26d55e46a166a0cdc96bd05',
         repo: 'betternight.github.io',
