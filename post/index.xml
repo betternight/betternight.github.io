@@ -6,7 +6,16 @@
     <description>Recent content in Posts on BetterNight的技术博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 18 Mar 2022 17:02:43 +0800</lastBuildDate><atom:link href="https://betternight.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 28 Mar 2022 16:27:05 +0800</lastBuildDate><atom:link href="https://betternight.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>是否需要在程序中实现Dns缓存</title>
+      <link>https://betternight.github.io/post/dns-cache-golang/</link>
+      <pubDate>Mon, 28 Mar 2022 16:27:05 +0800</pubDate>
+      
+      <guid>https://betternight.github.io/post/dns-cache-golang/</guid>
+      <description>1. 为什么需要dns缓存 golang非常适合开发网络io应用，我们经常会遇到如下代码 1 conn := net.Dial(&amp;#34;tcp&amp;#34;, addr) // addr可以是域名也可以是ip 当addr是ip</description>
+    </item>
+    
     <item>
       <title>手动更新homebrew版本</title>
       <link>https://betternight.github.io/post/brew-upgrade/</link>

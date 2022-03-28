@@ -3,21 +3,35 @@
   
   <url>
     <loc>https://betternight.github.io/</loc>
-    <lastmod>2022-03-18T17:02:43+08:00</lastmod>
+    <lastmod>2022-03-28T16:27:05+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://betternight.github.io/categories/</loc>
-    <lastmod>2022-03-18T17:02:43+08:00</lastmod>
+    <lastmod>2022-03-28T16:27:05+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://betternight.github.io/categories/golang/</loc>
+    <lastmod>2022-03-28T16:27:05+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://betternight.github.io/post/</loc>
-    <lastmod>2022-03-18T17:02:43+08:00</lastmod>
+    <lastmod>2022-03-28T16:27:05+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://betternight.github.io/post/dns-cache-golang/</loc>
+    <lastmod>2022-03-28T16:27:05+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
