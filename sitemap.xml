@@ -3,27 +3,41 @@
   
   <url>
     <loc>https://betternight.github.io/</loc>
-    <lastmod>2022-03-28T16:27:05+08:00</lastmod>
+    <lastmod>2022-04-01T10:34:31+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://betternight.github.io/categories/</loc>
-    <lastmod>2022-03-28T16:27:05+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://betternight.github.io/categories/golang/</loc>
-    <lastmod>2022-03-28T16:27:05+08:00</lastmod>
+    <lastmod>2022-04-01T10:34:31+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://betternight.github.io/post/</loc>
+    <lastmod>2022-04-01T10:34:31+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://betternight.github.io/categories/wordpress/</loc>
+    <lastmod>2022-04-01T10:34:31+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://betternight.github.io/post/wordpress-cloudflare-realip/</loc>
+    <lastmod>2022-04-01T10:34:31+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://betternight.github.io/categories/golang/</loc>
     <lastmod>2022-03-28T16:27:05+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Wordpress使用Cloudflare CDN后无法获取到用户真实ip - BetterNight的技术博客</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="betternight" /><meta name="description" content="1. 问题 当使用cloudflare CDN时，我们的wordpress 用户ip统计相关的插件无法获取到用户真实ip，最后统计的都是cloudfl" /><meta name="keywords" content="Hugo, theme, even" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="https://betternight.github.io/post/wordpress-cloudflare-realip/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous"><script async defer data-website-id="5b77e0d8-1e12-4cf2-a516-ad9a8ac25b6e" src="https://um.pj8.me/umami.js"></script>
+
+
+
+
+<meta property="og:title" content="Wordpress使用Cloudflare CDN后无法获取到用户真实ip" />
+<meta property="og:description" content="1. 问题 当使用cloudflare CDN时，我们的wordpress 用户ip统计相关的插件无法获取到用户真实ip，最后统计的都是cloudfl" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://betternight.github.io/post/wordpress-cloudflare-realip/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-04-01T10:34:31+08:00" />
+<meta property="article:modified_time" content="2022-04-01T10:34:31+08:00" />
+
+<meta itemprop="name" content="Wordpress使用Cloudflare CDN后无法获取到用户真实ip">
+<meta itemprop="description" content="1. 问题 当使用cloudflare CDN时，我们的wordpress 用户ip统计相关的插件无法获取到用户真实ip，最后统计的都是cloudfl"><meta itemprop="datePublished" content="2022-04-01T10:34:31+08:00" />
+<meta itemprop="dateModified" content="2022-04-01T10:34:31+08:00" />
+<meta itemprop="wordCount" content="423">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Wordpress使用Cloudflare CDN后无法获取到用户真实ip"/>
+<meta name="twitter:description" content="1. 问题 当使用cloudflare CDN时，我们的wordpress 用户ip统计相关的插件无法获取到用户真实ip，最后统计的都是cloudfl"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Night</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">首页</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Night</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">首页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Wordpress使用Cloudflare CDN后无法获取到用户真实ip</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2022-04-01 </span>
+        <div class="post-category">
+            <a href="/categories/wordpress/"> wordpress </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#1-问题">1. 问题</a></li>
+            <li><a href="#2-方法一在wordpress配置文件添加几行代码">2. 方法一：在wordpress配置文件添加几行代码</a></li>
+            <li><a href="#3-方法二通过nginx获取用户真实ip">3. 方法二：通过nginx获取用户真实ip</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h3 id="1-问题">1. 问题</h3>
+<p>当使用cloudflare CDN时，我们的wordpress 用户ip统计相关的插件无法获取到用户真实ip，最后统计的都是cloudflare CDN的ip。</p>
+<p>有两种方法解决这个问题。</p>
+<h3 id="2-方法一在wordpress配置文件添加几行代码">2. 方法一：在wordpress配置文件添加几行代码</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="c1">//绕过 CDN 代理IP获取客户真实IP地址
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">if</span><span class="p">(</span><span class="nx">isset</span><span class="p">(</span><span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">&#39;HTTP_X_FORWARDED_FOR&#39;</span><span class="p">]))</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">$list</span> <span class="o">=</span> <span class="nx">explode</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span><span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">&#39;HTTP_X_FORWARDED_FOR&#39;</span><span class="p">]);</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">&#39;REMOTE_ADDR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$list</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>将上面这段代码添加到网站根目录的wp-config.php文件开头中php下即可.</p>
+<h3 id="3-方法二通过nginx获取用户真实ip">3. 方法二：通过nginx获取用户真实ip</h3>
+<p>修改/etc/nginx/nginx.conf配置文件</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">http {
+</span></span><span class="line"><span class="cl">    # ********** http下面添加下面内容 ************* #
+</span></span><span class="line"><span class="cl">#Cloudflare ip addresses
+</span></span><span class="line"><span class="cl"># - IPv4
+</span></span><span class="line"><span class="cl">set_real_ip_from 173.245.48.0/20;
+</span></span><span class="line"><span class="cl">set_real_ip_from 103.21.244.0/22;
+</span></span><span class="line"><span class="cl">set_real_ip_from 103.22.200.0/22;
+</span></span><span class="line"><span class="cl">set_real_ip_from 103.31.4.0/22;
+</span></span><span class="line"><span class="cl">set_real_ip_from 141.101.64.0/18;
+</span></span><span class="line"><span class="cl">set_real_ip_from 108.162.192.0/18;
+</span></span><span class="line"><span class="cl">set_real_ip_from 190.93.240.0/20;
+</span></span><span class="line"><span class="cl">set_real_ip_from 188.114.96.0/20;
+</span></span><span class="line"><span class="cl">set_real_ip_from 197.234.240.0/22;
+</span></span><span class="line"><span class="cl">set_real_ip_from 198.41.128.0/17;
+</span></span><span class="line"><span class="cl">set_real_ip_from 162.158.0.0/15;
+</span></span><span class="line"><span class="cl">set_real_ip_from 104.16.0.0/13;
+</span></span><span class="line"><span class="cl">set_real_ip_from 104.24.0.0/14;
+</span></span><span class="line"><span class="cl">set_real_ip_from 172.64.0.0/13;
+</span></span><span class="line"><span class="cl">set_real_ip_from 131.0.72.0/22;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># - IPv6
+</span></span><span class="line"><span class="cl">set_real_ip_from 2400:cb00::/32;
+</span></span><span class="line"><span class="cl">set_real_ip_from 2606:4700::/32;
+</span></span><span class="line"><span class="cl">set_real_ip_from 2803:f800::/32;
+</span></span><span class="line"><span class="cl">set_real_ip_from 2405:b500::/32;
+</span></span><span class="line"><span class="cl">set_real_ip_from 2405:8100::/32;
+</span></span><span class="line"><span class="cl">set_real_ip_from 2a06:98c0::/29;
+</span></span><span class="line"><span class="cl">set_real_ip_from 2c0f:f248::/32;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">real_ip_header CF-Connecting-IP;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>最新配置参考:<a href="https://github.com/ergin/nginx-cloudflare-real-ip">https://github.com/ergin/nginx-cloudflare-real-ip</a></p>
+<p>通过上面两种方法都可以达到获取用户真实ip的目的。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">betternight</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2022-04-01
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/dns-cache-golang/">
+            <span class="next-text nav-default">是否需要在程序中实现Dns缓存</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+      var gitalk = new Gitalk({
+        id: '2022-04-01 10:34:31 \u002b0800 CST',
+        title: 'Wordpress使用Cloudflare CDN后无法获取到用户真实ip',
+        clientID: 'e9d17e377e46fbf01383',
+        clientSecret: '2f75944d44376cdde26d55e46a166a0cdc96bd05',
+        repo: 'betternight.github.io',
+        owner: 'betternight',
+        admin: ['betternight'],
+        body: decodeURI(location.href)
+      });
+      gitalk.render('gitalk-container');
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/gitalk/gitalk">comments powered by gitalk.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="https://github.com/betternight" class="iconfont icon-github" title="github"></a>
+  <a href="https://betternight.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2017 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>betternight</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>
